@@ -28,3 +28,25 @@
  cp {SRR8797509_1shuffled.part_001.fastq,SRR8797509_2shuffled.part_001.fastq} ../all_S1
 
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ cd all_S1
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ mkdir all_S1 && cd notshuffled_splitted
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/notshuffled_splitted$ cp {SRR8797509_1.part_001.fastq,SRR8797509_2.part_001.fastq} ../all_S1
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/notshuffled_splitted$ cd ..
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ cd shuffled_splitted
+
+ cp {SRR8797509_1shuffled.part_001.fastq,SRR8797509_2shuffled.part_001.fastq} ../all_S1
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ cd all_S1
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/all_S1$ for f in  *.fastq  ;
+> do
+> fastqc -t 1 -f fastq -noextract $f;
+> done
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/all_S1$ multiqc -z -o . .
+
+#4- Trimming
+
