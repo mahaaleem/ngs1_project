@@ -34,6 +34,7 @@
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ cd all_S1
 
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data/all_S1$ for f in  *.fastq  ;
+
 do
 
 fastqc -t 1 -f fastq -noextract $f;
@@ -48,6 +49,7 @@ done
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ mkdir notshuffled_Trimmed
 
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ for ((i=1;i<=5;i++)) ; 
+
 do
 
 f1="notshuffled_splitted/SRR8797509_1.part_00$i.fastq"
@@ -70,8 +72,10 @@ done
 
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ mkdir shuffled_A_Trimmed
 
-for ((i=1;i<=5;i++)) ; 
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ for ((i=1;i<=5;i++)) ; 
+
 do
+
 f1="shuffled_splitted/SRR8797509_1shuffled.part_00$i.fastq"
 f2="shuffled_splitted/SRR8797509_2shuffled.part_00$i.fastq"
 
@@ -85,6 +89,7 @@ adap="/home/maha/miniconda3/envs/ngs1/share/trimmomatic-0.38-1/adapters"
 
 trimmomatic PE -threads 1 -phred33 -trimlog trimLogFile -summary statsSummaryFile  $f1 $f2 $newf1 $newf1U $newf2 $newf2U \
 ILLUMINACLIP:$adap/TruSeq3-PE.fa:2:30:10:1 SLIDINGWINDOW:4:25 MINLEN:36
+
 done
 
 #5- Alignment [Align all the samples (1:5) using BWA and Hisat against the human reference file. (BWA for unshuffled and HISAT for huffled)]
@@ -103,6 +108,7 @@ done
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ READS=$(grep "^chr22" gencode.v29.annotation.gtf | awk -F'\t' '{print $9}' | awk -F';' '{print $1}' | awk -F' ' '{print $2}' | awk -F'"' '{print $2}' | sort | uniq)
 
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ for value in $READS ;
+    
     do 
         echo "Processing: $value"
         seqkit grep -r -p ${value} gencode.v29.pc_transcripts.fa | awk -F'|' '{print $1}' >> gencode.v29.pc_transcripts.chr22.simplified.fa
