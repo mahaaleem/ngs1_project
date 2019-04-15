@@ -133,5 +133,38 @@ R2="/home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/notshuffled_Trimmed/
 /usr/bin/time -v bwa mem bwaIndex/gencode.v29.pc_transcripts.chr22.simplified.fa $R1 $R2 > SRR8797509_part_00$i.sam
 done
 
+#5.5. sequence alignment for aggressive trimmed shuffled samples to human chr 22 by using hisat 
+#5.5.1. Data dwnload
 
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align/Index4bwa$ cd ../..
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ wget http://genomedata.org/rnaseq-tutorial/fasta/GRCh38/chr22_with_ERCC92.fa
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ wget http://genomedata.org/rnaseq-tutorial/annotations/GRCh38/chr22_with_ERCC92.gtf
+
+#5.5.2. Indexing
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ mkdir -p hisat_align/hisatIndex && cd hisat_align/hisatIndex
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align/hisatIndex$ ln -s /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/chr22_with_ERCC92.fa .
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align/hisatIndex$ hisat2_extract_splice_sites.py /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/chr22_with_ERCC92.gtf > splicesites.tsv
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align/hisatIndex$ hisat2_extract_exons.py /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/chr22_with_ERCC92.gtf > exons.tsv
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align/hisatIndex$ hisat2-build -p 1 --ss splicesites.tsv --exon exons.tsv chr22_with_ERCC92.fa chr22_with_ERCC92
+
+#5.5.3. Aligning aggressive trimmed shuffled saples to human ch22
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align/hisatIndex$ cd ..
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align/ for ((i=1;i<=5;i++)) ;
+
+do
+ 
+R1="/home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/shuffled_A_Trimmed/SRR8797509_1shuffled.part_00$i.pe.trim.fq"
+R2="/home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/shuffled_A_Trimmed/SRR8797509_2shuffled.part_00$i.pe.trim.fq"
+hisat2 -p 1 -x hisatIndex/chr22_with_ERCC92 --dta --rna-strandness RF -1 $R1 -2 $R2 -S shuff_SRR8797509_part_00$i.sam
+
+done
 
