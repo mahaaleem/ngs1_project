@@ -1,0 +1,11 @@
+
+VCFtools - 0.1.16
+(C) Adam Auton and Anthony Marcketta 2009
+
+Parameters as interpreted:
+	--vcf pilot.vcf
+	--chr 1
+	--to-bp 2000000
+	--from-bp 1000000
+
+Error: Can't determine file type of pilot.vcf
