@@ -116,7 +116,7 @@ for value in $READS ;
     
  #5.3. Indexing gencode.v29.pc_transcripts.chr22.simplified.fa
 
-mkdir -p bwa_align/Index4bwa && cd bwa_align/bwaIndex
+mkdir -p bwa_align/bwaIndex && cd bwa_align/bwaIndex
 
 ln -s  ln -s /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/gencode.v29.pc_transcripts.chr22.simplified.fa .
  . 
