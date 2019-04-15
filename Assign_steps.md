@@ -84,6 +84,7 @@ done
 #5- Alignment [Align all the samples (1:5) using BWA and Hisat against the human reference file. (BWA for unshuffled and HISAT for huffled)]
 
 #5.1. download gencode.v29.pc_transcripts & gencode.v29.annotation
+
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ wget -c ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_29/gencode.v29.pc_transcripts.fa.gz
 
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ gunzip gencode.v29.pc_transcripts.fa.gz
