@@ -262,7 +262,9 @@ conda install -c conda-forge pypy3.5
 
 cd ..
 wget https://bootstrap.pypa.io/get-pip.py
-pypy3 get-pip.pypypy3 -m pip install gffutils numpy tqdm 'intervaltree<3.0'mkdir -p gtf-compare/gtfs && cd gtf-compare/gtfs
+pypy3 get-pip.py
+pypy3 -m pip install gffutils numpy tqdm 'intervaltree<3.0'
+mkdir -p gtf-compare/gtfs && cd gtf-compare/gtfs
 
 ln -s /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align/ref_sup_*.gtf .
 ln -s /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/chr22_with_ERCC92.gtf .mkdir -p /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one && cd /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one
