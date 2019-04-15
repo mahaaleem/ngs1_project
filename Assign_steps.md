@@ -5,7 +5,7 @@ mkdir Raw_Data && cd Raw_Data
 wget -c ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByRun/sra/SRR/SRR879/SRR8797509/SRR8797509.sra
 
 #1.2. Convert 5M Human RNA-Seq fragements from SRA to Fastq using fastq-dump and split R1 & R2
-
+source activate ngs1
 fastq-dump --split-files -X 5000000 SRR8797509
 
 #2. Prepare the data
@@ -122,5 +122,16 @@ ln -s  ln -s /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/gencode.v29
  . 
 
 bwa index -a bwtsw gencode.v29.pc_transcripts.chr22.simplified.fa
+
+#5.4. sequence alignment for mild trimmed unshuffled samples to human chr 22 by using bwa
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align/Index4bwa$ cd ..
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align$ for ((i=1;i<=5;i++)) ; 
+ do
+R1="/home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/notshuffled_Trimmed/SRR8797509_1.part_00$i.pe.trim.fq"
+R2="/home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/notshuffled_Trimmed/SRR8797509_2.part_00$i.pe.trim.fq"
+/usr/bin/time -v bwa mem bwaIndex/gencode.v29.pc_transcripts.chr22.simplified.fa $R1 $R2 > SRR8797509_part_00$i.sam
+done
+
 
 
