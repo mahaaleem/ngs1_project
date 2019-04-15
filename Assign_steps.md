@@ -254,4 +254,26 @@ do
 stringtie shuff_SRR8797509_part_00$i.sorted.bam --rf -l ref_sup_$i -G /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/chr22_with_ERCC92.gtf -o ref_sup_$i.gtf 
 done
 
+#7. Using GTF-Compare to Compare the Generated Annotation Files to a Reference Annotation
 
+conda create -n ngs-gtf python=3.6 anaconda
+source activate ngs-gtf
+conda install -c conda-forge pypy3.5
+
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align$ cd ..
+wget https://bootstrap.pypa.io/get-pip.py
+pypy3 get-pip.pypypy3 -m pip install gffutils numpy tqdm 'intervaltree<3.0'mkdir -p gtf-compare/gtfs && cd gtf-compare/gtfs
+
+ln -s /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align/ref_sup_*.gtf .
+ln -s /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/chr22_with_ERCC92.gtf .mkdir -p /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one && cd /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one$ wget https://raw.githubusercontent.com/abdelrahmanMA/gtf-compare/master/code/comp.py
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one$ wget https://raw.githubusercontent.com/abdelrahmanMA/gtf-compare/master/code/stat.py
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one$ for ((i=1;i<=5;i++)) ;
+
+do
+pypy3 comp.py -r ../gtfs/ref_sup_*.gtf ../gtfs/chr22_with_ERCC92.gtf
+pypy3 stat.py
+done
