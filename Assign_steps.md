@@ -267,7 +267,8 @@ pypy3 -m pip install gffutils numpy tqdm 'intervaltree<3.0'
 mkdir -p gtf-compare/gtfs && cd gtf-compare/gtfs
 
 ln -s /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align/ref_sup_*.gtf .
-ln -s /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/chr22_with_ERCC92.gtf .mkdir -p /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one && cd /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one
+ln -s /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/chr22_with_ERCC92.gtf .
+mkdir -p /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one && cd /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one
 
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one$ wget https://raw.githubusercontent.com/abdelrahmanMA/gtf-compare/master/code/comp.py
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one$ wget https://raw.githubusercontent.com/abdelrahmanMA/gtf-compare/master/code/stat.py
