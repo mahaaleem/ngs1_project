@@ -283,6 +283,7 @@ done
 #8. Differential_expression
 
 cd ../..
+
 mkdir -p assignment/diff_exp && cd assignment/diff_exp
 mkdir assignment/ngs1_project/out && cd assignment/ngs1_project/out|mv assignment/ngs1_project/main_reads/out/*.fastq out| mv assignment/ngs1_project/shuff_reads/out/*.fastq out
 
