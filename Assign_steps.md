@@ -35,7 +35,9 @@
 
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data/all_S1$ for f in  *.fastq  ;
 do
+
 fastqc -t 1 -f fastq -noextract $f;
+
 done
 
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data/all_S1$ multiqc -z -o . .
@@ -104,6 +106,7 @@ done
     do 
         echo "Processing: $value"
         seqkit grep -r -p ${value} gencode.v29.pc_transcripts.fa | awk -F'|' '{print $1}' >> gencode.v29.pc_transcripts.chr22.simplified.fa
+    
     done
 
 
