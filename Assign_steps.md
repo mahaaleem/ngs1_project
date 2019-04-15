@@ -1,39 +1,38 @@
 # 1. Data Download
 #1.1. Download the RNA-Seq fragements from https://www.ncbi.nlm.nih.gov/sra/?term=SRR8797509
 
-~/Documents/NGS1_Assign./ngs1_project$ mkdir Raw_Data && cd Raw_Data
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ wget -c ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByRun/sra/SRR/SRR879/SRR8797509/SRR8797509.sra
-
+mkdir Raw_Data && cd Raw_Data
+wget -c ftp://ftp-trace.ncbi.nih.gov/sra/sra-instant/reads/ByRun/sra/SRR/SRR879/SRR8797509/SRR8797509.sra
 
 #1.2. Convert 5M Human RNA-Seq fragements from SRA to Fastq using fastq-dump and split R1 & R2
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ fastq-dump --split-files -X 5000000 SRR8797509
+fastq-dump --split-files -X 5000000 SRR8797509
 
 #2. Prepare the data
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ seqkit split2 -1 SRR8797509_1.fastq -2 SRR8797509_2.fastq -p 5 -O notshuffled_splitted -f
+seqkit split2 -1 SRR8797509_1.fastq -2 SRR8797509_2.fastq -p 5 -O notshuffled_splitted -f
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ seqkit shuffle SRR8797509_1.fastq > SRR8797509_1shuffled.fastq
+seqkit shuffle SRR8797509_1.fastq > SRR8797509_1shuffled.fastq
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ seqkit shuffle SRR8797509_2.fastq > SRR8797509_2shuffled.fastq
+seqkit shuffle SRR8797509_2.fastq > SRR8797509_2shuffled.fastq
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ seqkit split2 -1 SRR8797509_1shuffled.fastq -2 SRR8797509_2shuffled.fastq -p 5 -O shuffled_splitted -f
+seqkit split2 -1 SRR8797509_1shuffled.fastq -2 SRR8797509_2shuffled.fastq -p 5 -O shuffled_splitted -f
 
 #3. FASTQ Quality Control
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ mkdir all_S1 && cd notshuffled_splitted
+mkdir all_S1 && cd notshuffled_splitted
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data/notshuffled_splitted$ cp {SRR8797509_1.part_001.fastq,SRR8797509_2.part_001.fastq} ../all_S1
+cp {SRR8797509_1.part_001.fastq,SRR8797509_2.part_001.fastq} ../all_S1
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data/notshuffled_splitted$ cd ..
+cd ..
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ cd shuffled_splitted
+cd shuffled_splitted
 
- cp {SRR8797509_1shuffled.part_001.fastq,SRR8797509_2shuffled.part_001.fastq} ../all_S1
+cp {SRR8797509_1shuffled.part_001.fastq,SRR8797509_2shuffled.part_001.fastq} ../all_S1
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ cd all_S1
+cd all_S1
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data/all_S1$ for f in  *.fastq  ;
+for f in  *.fastq  ;
 
 do
 
@@ -46,9 +45,9 @@ done
 #4. Trimming
 #4.1. Mild Trimming for unshufflled samples
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ mkdir notshuffled_Trimmed
+mkdir notshuffled_Trimmed
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ for ((i=1;i<=5;i++)) ; 
+for ((i=1;i<=5;i++)) ; 
 
 do
 
@@ -70,9 +69,9 @@ done
 
 #4.2. Aggressive Trimming for shufflled samples
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ mkdir shuffled_A_Trimmed
+mkdir shuffled_A_Trimmed
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ for ((i=1;i<=5;i++)) ; 
+for ((i=1;i<=5;i++)) ; 
 
 do
 
@@ -96,23 +95,32 @@ done
 
 #5.1. download gencode.v29.pc_transcripts & gencode.v29.annotation
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ wget -c ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_29/gencode.v29.pc_transcripts.fa.gz
+wget -c ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_29/gencode.v29.pc_transcripts.fa.gz
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ gunzip gencode.v29.pc_transcripts.fa.gz
+gunzip gencode.v29.pc_transcripts.fa.gz
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ wget -c ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_29/gencode.v29.annotation.gtf.gz
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ gunzip gencode.v29.annotation.gtf.gz
+wget -c ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_29/gencode.v29.annotation.gtf.gz
+gunzip gencode.v29.annotation.gtf.gz
 
 #5.2. Select the transcripts of Chr22
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ READS=$(grep "^chr22" gencode.v29.annotation.gtf | awk -F'\t' '{print $9}' | awk -F';' '{print $1}' | awk -F' ' '{print $2}' | awk -F'"' '{print $2}' | sort | uniq)
+READS=$(grep "^chr22" gencode.v29.annotation.gtf | awk -F'\t' '{print $9}' | awk -F';' '{print $1}' | awk -F' ' '{print $2}' | awk -F'"' '{print $2}' | sort | uniq)
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ for value in $READS ;
+for value in $READS ;
     
     do 
         echo "Processing: $value"
         seqkit grep -r -p ${value} gencode.v29.pc_transcripts.fa | awk -F'|' '{print $1}' >> gencode.v29.pc_transcripts.chr22.simplified.fa
     
     done
+    
+ #5.3. Indexing gencode.v29.pc_transcripts.chr22.simplified.fa
+
+mkdir -p bwa_align/Index4bwa && cd bwa_align/bwaIndex
+
+ln -s  ln -s /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/gencode.v29.pc_transcripts.chr22.simplified.fa .
+ . 
+
+bwa index -a bwtsw gencode.v29.pc_transcripts.chr22.simplified.fa
 
 
