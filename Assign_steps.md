@@ -260,8 +260,7 @@ conda create -n ngs-gtf python=3.6 anaconda
 source activate ngs-gtf
 conda install -c conda-forge pypy3.5
 
-
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align$ cd ..
+cd ..
 wget https://bootstrap.pypa.io/get-pip.py
 pypy3 get-pip.pypypy3 -m pip install gffutils numpy tqdm 'intervaltree<3.0'mkdir -p gtf-compare/gtfs && cd gtf-compare/gtfs
 
@@ -271,9 +270,39 @@ ln -s /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/chr22_with_ERCC92.
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one$ wget https://raw.githubusercontent.com/abdelrahmanMA/gtf-compare/master/code/comp.py
 ~/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one$ wget https://raw.githubusercontent.com/abdelrahmanMA/gtf-compare/master/code/stat.py
 
-~/Documents/NGS1_Assign./ngs1_project/Raw_Data/gtf-compare/method_one$ for ((i=1;i<=5;i++)) ;
+for ((i=1;i<=5;i++)) ;
 
 do
 pypy3 comp.py -r ../gtfs/ref_sup_*.gtf ../gtfs/chr22_with_ERCC92.gtf
 pypy3 stat.py
 done
+
+#8. Differential_expression
+
+cd ../..
+mkdir -p assignment/diff_exp && cd assignment/diff_exp
+mkdir assignment/ngs1_project/out && cd assignment/ngs1_project/out|mv assignment/ngs1_project/main_reads/out/*.fastq out| mv assignment/ngs1_project/shuff_reads/out/*.fastq out
+
+#wget -c https://0x0.st/zK57.gz -O ref.tar.gz
+#tar xvzf ref.tar.gz
+#wget -c https://raw.githubusercontent.com/mr-eyes/nu-ngs01/master/Day-6/deseq1.r
+#wget -c https://raw.githubusercontent.com/mr-eyes/nu-ngs01/master/Day-6/draw-heatmap.r#1 Setup enviornemnt
+#conda activate ngs1
+
+# conda install kallisto
+# conda install samtools# Install subread, we will use featureCount : a software program developed for counting reads to genomic features such as genes, exons, promoters and genomic bins.
+conda install subread# install r and dependicies
+
+#conda install r
+conda install -y bioconductor-deseq r-gplots
+RUNLOG=runlog.txt#Step 2 (Quantification)Step
+GTF=/home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/chr22_with_ERCC92.gtf# Generate the counts.
+featureCounts -a $GTF -g gene_name -o counts.txt  /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align/main_SRR8797509*.bam  /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align/shuff_SRR8797509*.bam
+
+# Simplify the file to keep only the count columns.
+cat counts.txt | cut -f 1,7-12 > simple_counts.txt
+
+# Analyze the counts with DESeq1.
+cat simple_counts.txt | Rscript deseq1.r 5x5 > results_deseq1.tsv#View only rows with pval < 0.05
+cat results_deseq1.tsv | awk ' $8 < 0.05 { print $0 }' > filtered_results_deseq1.tsv
+cat filtered_results_deseq1.tsv | Rscript draw-heatmap.r > hisat_output.pdf
