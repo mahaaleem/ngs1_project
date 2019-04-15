@@ -168,3 +168,90 @@ hisat2 -p 1 -x hisatIndex/chr22_with_ERCC92 --dta --rna-strandness RF -1 $R1 -2 
 
 done
 
+#6. Assembly
+#6.1. Assembly aligned unshuffled samples
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align/ cd ..
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ cd bwa_align
+
+#6.1.1. Convert sam files into bam files
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align$ samtools view -bS SRR8797509_part_001.sam > SRR8797509_part_001.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align$ samtools view -bS SRR8797509_part_002.sam > SRR8797509_part_002.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align$ samtools view -bS SRR8797509_part_003.sam > SRR8797509_part_003.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align$ samtools view -bS SRR8797509_part_004.sam > SRR8797509_part_004.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align$ samtools view -bS SRR8797509_part_005.sam > SRR8797509_part_005.bam
+
+#6.1.2. convert the BAM files to a sorted BAM files
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align$ samtools sort SRR8797509_part_001.bam -o SRR8797509_part_001.sorted.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align$ samtools sort SRR8797509_part_002.bam -o SRR8797509_part_002.sorted.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align$ samtools sort SRR8797509_part_003.bam -o SRR8797509_part_003.sorted.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align$ samtools sort SRR8797509_part_004.bam -o SRR8797509_part_004.sorted.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align$ samtools sort SRR8797509_part_005.bam -o SRR8797509_part_005.sorted.bam
+
+#6.1.3 # Export statistical report for each sample indvidually
+
+for ((i=1;i<=5;i++)) ;
+    
+do
+  samtools flagstat SRR8797509_part_00$i.sorted.bam > useful_stat_$i.txt;
+
+done
+
+#6.1.4. Assembly without known annotations
+
+for ((i=1;i<=5;i++)) ;
+do
+
+stringtie SRR8797509_part_00$i.sorted.bam --rf -l ref_free_$i -o ref_free_$i.gtf
+
+done
+
+#6.1.5. Assembly with known annotations
+for ((i=1;i<=5;i++));
+do
+stringtie SRR8797509_part_00$i.sorted.bam --rf -l ref_sup_$i -G /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/chr22_with_ERCC92.gtf -o ref_sup_$i.gtf 
+done
+
+# 6.2.Assembly for aligned shuffled data
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/bwa_align$ cd ..
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ cd hisat_align
+
+# 6.2.1. convert SAM files into BAM files
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align$ samtools view -bS shuff_SRR8797509_part_001.sam > shuff_SRR8797509_part_001.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align$ samtools view -bS shuff_SRR8797509_part_002.sam > shuff_SRR8797509_part_002.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align$ samtools view -bS shuff_SRR8797509_part_003.sam > shuff_SRR8797509_part_003.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align$ samtools view -bS shuff_SRR8797509_part_004.sam > shuff_SRR8797509_part_004.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align$ samtools view -bS shuff_SRR8797509_part_005.sam > shuff_SRR8797509_part_005.bam
+
+# 6.2.2. convert the BAM files into sorted BAM files 
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align$ samtools sort shuff_SRR8797509_part_001.bam -o shuff_SRR8797509_part_001.sorted.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align$ samtools sort shuff_SRR8797509_part_002.bam -o shuff_SRR8797509_part_002.sorted.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align$ samtools sort shuff_SRR8797509_part_003.bam -o shuff_SRR8797509_part_003.sorted.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align$ samtools sort shuff_SRR8797509_part_004.bam -o shuff_SRR8797509_part_004.sorted.bam
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data/hisat_align$ samtools sort shuff_SRR8797509_part_005.bam -o shuff_SRR8797509_part_005.sorted.bam
+
+#6.2.3. Export statistical report for each sample indvidually
+for ((i=1;i<=5;i++)) ;
+do
+samtools flagstat shuff_SRR8797509_part_00$i.sorted.bam > shuff_useful_stat_$i.txt;
+done
+
+#6.2.3. Assembly without known annotations
+for ((i=1;i<=5;i++));
+do
+
+stringtie shuff_SRR8797509_part_00$i.sorted.bam --rf -l ref_free_$i -o ref_free_$i.gtf
+
+done
+
+#6.2.4. Assembly with known annotations
+for ((i=1;i<=5;i++)) ;
+do
+stringtie shuff_SRR8797509_part_00$i.sorted.bam --rf -l ref_sup_$i -G /home/maha/Documents/NGS1_Assign./ngs1_project/Raw_Data/chr22_with_ERCC92.gtf -o ref_sup_$i.gtf 
+done
+
+
