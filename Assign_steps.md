@@ -79,7 +79,26 @@ adap="/home/maha/miniconda3/envs/ngs1/share/trimmomatic-0.38-1/adapters"
 
 trimmomatic PE -threads 1 -phred33 -trimlog trimLogFile -summary statsSummaryFile  $f1 $f2 $newf1 $newf1U $newf2 $newf2U \
 ILLUMINACLIP:$adap/TruSeq3-PE.fa:2:30:10:1 SLIDINGWINDOW:4:25 MINLEN:36
-
 done
 
-#5- Alignment
+#5- Alignment [Align all the samples (1:5) using BWA and Hisat against the human reference file. (BWA for unshuffled and HISAT for huffled)]
+
+#5.1. download gencode.v29.pc_transcripts & gencode.v29.annotation
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ wget -c ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_29/gencode.v29.pc_transcripts.fa.gz
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ gunzip gencode.v29.pc_transcripts.fa.gz
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ wget -c ftp://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_29/gencode.v29.annotation.gtf.gz
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ gunzip gencode.v29.annotation.gtf.gz
+
+#5.2. Select the transcripts of Chr22
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ READS=$(grep "^chr22" gencode.v29.annotation.gtf | awk -F'\t' '{print $9}' | awk -F';' '{print $1}' | awk -F' ' '{print $2}' | awk -F'"' '{print $2}' | sort | uniq)
+
+~/Documents/NGS1_Assign./ngs1_project/Raw_Data$ for value in $READS ;
+    do 
+        echo "Processing: $value"
+        seqkit grep -r -p ${value} gencode.v29.pc_transcripts.fa | awk -F'|' '{print $1}' >> gencode.v29.pc_transcripts.chr22.simplified.fa
+    done
+
+
